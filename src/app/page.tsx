@@ -27,8 +27,13 @@ export default function Home() {
   const [results, setResults] = useState<CompressedResult[]>([]);
   const [isCompressing, setIsCompressing] = useState(false);
 
+  const MAX_FILES = 3;
+
   const handleFilesAdded = (newFiles: File[]) => {
-    const newEntries = newFiles.map((file) => ({
+    const remaining = MAX_FILES - entries.length;
+    if (remaining <= 0) return;
+    const accepted = newFiles.slice(0, remaining);
+    const newEntries = accepted.map((file) => ({
       file,
       description: file.name.replace(/\.[^.]+$/, "").replace(/[_\s]+/g, " "),
     }));
@@ -109,7 +114,6 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 py-16">
       <div className="mb-10 text-center">
-        <img src="https://cdn.prod.website-files.com/635e445db596369fc56d7f19/635f22d6b59636184877841c_Arrival%20Creative%20Logo.svg" alt="Arrival Creative" className="h-8 mx-auto mb-4" />
         <h1 className="text-4xl tracking-tight mb-2 font-normal font-['Volkhov',serif]">Website Image Machine</h1>
         <h2 className="text-lg text-[#78766d] font-light font-['Volkhov',serif]">Compress and resize in one step</h2>
       </div>
