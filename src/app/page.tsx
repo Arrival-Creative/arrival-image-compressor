@@ -114,8 +114,8 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 py-16">
       <div className="mb-10 text-center">
-        <h1 className="text-4xl tracking-tight mb-2 font-normal font-['Volkhov',serif]">Website Image Machine</h1>
-        <h2 className="text-lg text-[#78766d] font-light font-['Volkhov',serif]">Compress and resize in one step</h2>
+        <h1 className="text-4xl tracking-tight mb-2 font-normal font-['Volkhov',serif]">⚙️ Website Image Machine</h1>
+        <h2 className="text-lg text-[#78766d] font-light font-['Volkhov',serif]">⚡ Compress and resize in one step</h2>
       </div>
 
       <div className="w-1/2">
