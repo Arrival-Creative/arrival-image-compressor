@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     const outH = outputMeta.height || targetHeight;
     const filename = `${slug}-${outW}x${outH}.webp`;
 
-    return new NextResponse(compressed, {
+    return new NextResponse(new Uint8Array(compressed), {
       status: 200,
       headers: {
         "Content-Type": "image/webp",
