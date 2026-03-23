@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-[#fffef7] text-[#31070d] min-h-screen antialiased bg-[url('/texture.webp')] bg-repeat bg-[length:600px_auto]">
+      <body className="text-[#31070d] min-h-screen antialiased">
         {children}
       </body>
     </html>
