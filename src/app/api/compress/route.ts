@@ -1,7 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 
+// Simple in-memory rate limiter (per IP, resets on cold start)
+const rateMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 20; // max requests per window
+const RATE_WINDOW = 60 * 1000; // 1 minute in ms
+
+// Max file size: 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
 export async function POST(req: NextRequest) {
+  // Rate limiting
+  const ip = req.headers.get("x-forwarded-for") || "unknown";
+  const now = Date.now();
+  const entry = rateMap.get(ip);
+  if (entry && now < entry.resetTime) {
+    entry.count++;
+    if (entry.count > RATE_LIMIT) {
+      return NextResponse.json(
+        { error: "Too many requests. Please wait a minute." },
+        { status: 429 }
+      );
+    }
+  } else {
+    rateMap.set(ip, { count: 1, resetTime: now + RATE_WINDOW });
+  }
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
@@ -9,6 +32,14 @@ export async function POST(req: NextRequest) {
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: "File too large. Max size is 10MB." },
+        { status: 413 }
+      );
     }
 
     // Validate file type
@@ -40,7 +71,7 @@ export async function POST(req: NextRequest) {
         position: "centre",
         withoutEnlargement: true,
       })
-      .webp({ quality: 80 })
+      .webp({ quality: 50 })
       .toBuffer();
 
     // Build the filename slug
