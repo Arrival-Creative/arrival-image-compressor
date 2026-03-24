@@ -4,19 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  /* Fluid typography to match arrivalcreative.com */
+  font-size: calc(0.625rem + 0.416667vw);
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
-  background-color: #faf8f0;
-}
-
-html, body {
-  overflow: hidden;
+  /* Aligned to arrivalcreative.com background: rgb(255,254,247) */
+  background-color: #fffef7;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Volkhov', serif;
   font-weight: 400;
 }
-
-

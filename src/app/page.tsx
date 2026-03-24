@@ -4,6 +4,7 @@ import { useState } from "react";
 import FileDropZone from "@/components/FileDropZone";
 import FileList from "@/components/FileList";
 import CompressButton from "@/components/CompressButton";
+import AdvancedSettings, { CompressionSettings, DEFAULT_SETTINGS } from "@/components/AdvancedSettings";
 
 export interface FileEntry {
   file: File;
@@ -26,6 +27,7 @@ export default function Home() {
   const [entries, setEntries] = useState<FileEntry[]>([]);
   const [results, setResults] = useState<CompressedResult[]>([]);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [settings, setSettings] = useState<CompressionSettings>(DEFAULT_SETTINGS);
 
   const MAX_FILES = 3;
 
@@ -61,6 +63,13 @@ export default function Home() {
         const formData = new FormData();
         formData.append("file", entry.file);
         formData.append("description", entry.description);
+        formData.append("format", settings.format);
+        formData.append("quality", String(settings.quality));
+        formData.append("dimensionPreset", settings.dimensionPreset);
+        if (settings.dimensionPreset === "custom") {
+          formData.append("customWidth", settings.customWidth);
+          formData.append("customHeight", settings.customHeight);
+        }
 
         const res = await fetch("/api/compress", {
           method: "POST",
@@ -130,6 +139,8 @@ export default function Home() {
             onDescriptionChange={handleDescriptionChange}
             onRemove={handleRemoveFile}
           />
+
+          <AdvancedSettings settings={settings} onChange={setSettings} />
 
           <div className="flex flex-col items-center gap-4">
             <CompressButton
