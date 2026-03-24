@@ -23,6 +23,26 @@ export interface CompressedResult {
   error?: string;
 }
 
+function UploadIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#d12840"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="16 16 12 12 8 16" />
+      <line x1="12" y1="12" x2="12" y2="21" />
+      <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [entries, setEntries] = useState<FileEntry[]>([]);
   const [results, setResults] = useState<CompressedResult[]>([]);
@@ -121,18 +141,23 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6 py-16">
-      <div className="mb-10 text-center">
-        <h1 className="text-4xl tracking-tight mb-2 font-normal font-['Volkhov',serif]">⚙️ Website Image Machine</h1>
-        <h2 className="text-lg text-[#78766d] font-light font-['Volkhov',serif]">⚡ Compress and resize in one step</h2>
+    <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
+      <div className="mb-8 text-center">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <UploadIcon />
+          <h1 className="text-3xl tracking-tight font-normal font-['Volkhov',serif]">Image Machine</h1>
+        </div>
+        <p className="text-sm text-[#78766d] font-light font-['Open_Sans',sans-serif]">
+          Compress and resize for the web — up to 3 images at a time
+        </p>
       </div>
 
-      <div className="w-1/2">
+      <div className="w-full max-w-xl">
         <FileDropZone onFilesAdded={handleFilesAdded} />
       </div>
 
       {entries.length > 0 && (
-        <div className="mt-8 space-y-6 w-1/2">
+        <div className="mt-6 space-y-4 w-full max-w-xl">
           <FileList
             entries={entries}
             results={results}
@@ -142,17 +167,14 @@ export default function Home() {
 
           <AdvancedSettings settings={settings} onChange={setSettings} />
 
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-stretch gap-3">
             <CompressButton
               onCompress={handleCompress}
               isCompressing={isCompressing}
               disabled={entries.length === 0}
               results={results}
             />
-            <button
-              onClick={handleClear}
-              className="px-4 py-2 text-sm text-[#78766d] hover:text-[#31070d] transition-colors font-['Open_Sans',sans-serif] font-light"
-            >
+            <button onClick={handleClear} className="btn btn-ghost text-xs">
               Clear all
             </button>
           </div>

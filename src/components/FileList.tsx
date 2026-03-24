@@ -39,24 +39,23 @@ function FileCard({
   }, [entry.file]);
 
   return (
-    <li className="bg-[#faf8f0] border border-[#eae8df] rounded-lg px-4 py-3">
+    <li className="bg-[#faf8f0] border border-[#eae8df] border-l-2 border-l-[#d12840]/30 rounded-lg px-4 py-3">
       <div className="flex items-start gap-3">
         {previewUrl && (
           <img
             src={previewUrl}
             alt=""
-            className="w-14 h-14 object-cover flex-shrink-0 border border-[#eae8df]"
+            className="w-10 h-10 object-cover flex-shrink-0 rounded border border-[#eae8df]"
           />
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between mb-2">
-            <div className="truncate flex-1 min-w-0">
-              <p className="text-xs text-[#78766d] mb-0.5">Original filename:</p>
-              <p className="text-sm font-medium truncate">{entry.file.name}</p>
-            </div>
+            <p className="text-sm font-medium truncate text-[#31070d] flex-1 min-w-0">
+              {entry.file.name}
+            </p>
             <button
               onClick={() => onRemove(index)}
-              className="ml-4 text-[#eae8df] hover:text-[#d12840] text-lg leading-none flex-shrink-0"
+              className="ml-4 text-[#eae8df] hover:text-[#d12840] text-lg leading-none flex-shrink-0 transition-colors"
             >
               ×
             </button>
@@ -64,7 +63,7 @@ function FileCard({
 
           {!result && (
             <div>
-              <p className="text-xs text-[#78766d] mb-1">New file name (just explain what&apos;s in the image):</p>
+              <p className="text-xs text-[#78766d] mb-1">Image description</p>
               <input
                 type="text"
                 value={entry.description}
@@ -75,19 +74,33 @@ function FileCard({
             </div>
           )}
 
-          <p className="text-xs text-[#78766d] mt-1.5">
-            {formatSize(entry.file.size)}
+          {/* File size and result stats */}
+          <div className="flex items-center gap-1.5 flex-wrap mt-2">
+            <span className="text-xs text-[#78766d] bg-[#eae8df]/60 px-2 py-0.5 rounded-full">
+              {formatSize(entry.file.size)}
+            </span>
+
             {result && !result.error && (
-              <span className="text-[#2f590d] ml-2">
-                → {formatSize(result.compressedSize)} ({result.ratio.toFixed(0)}%
-                smaller) · {result.originalDimensions} → {result.outputDimensions} ·{" "}
-                <span className="text-[#78766d]">{result.outputName}</span>
+              <>
+                <span className="text-[#eae8df] text-xs">→</span>
+                <span className="text-xs text-[#2f590d] bg-[#86d149]/15 px-2 py-0.5 rounded-full font-medium">
+                  {formatSize(result.compressedSize)}
+                </span>
+                <span className="text-xs text-[#2f590d] bg-[#86d149]/15 px-2 py-0.5 rounded-full font-medium">
+                  -{result.ratio.toFixed(0)}%
+                </span>
+                <span className="text-xs text-[#78766d] bg-[#eae8df]/60 px-2 py-0.5 rounded-full">
+                  {result.outputDimensions}
+                </span>
+              </>
+            )}
+
+            {result?.error && (
+              <span className="text-xs text-[#690110] bg-[#d12840]/10 px-2 py-0.5 rounded-full">
+                {result.error}
               </span>
             )}
-            {result?.error && (
-              <span className="text-[#690110] ml-2">Error: {result.error}</span>
-            )}
-          </p>
+          </div>
         </div>
       </div>
     </li>

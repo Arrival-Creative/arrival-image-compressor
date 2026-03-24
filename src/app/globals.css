@@ -4,6 +4,55 @@
 @tailwind components;
 @tailwind utilities;
 
+@theme {
+  --radius-btn: 0.25rem;
+  --color-brand: #d12840;
+  --color-brand-dark: #b01f33;
+  --color-text-primary: #31070d;
+  --color-text-muted: #78766d;
+  --color-surface: #faf8f0;
+  --color-border: #eae8df;
+  --color-bg: #fffef7;
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    padding: 0.625rem 1.75rem;
+    border-radius: var(--radius-btn);
+    transition: background-color 150ms, box-shadow 150ms;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background-color: #d12840;
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: #b01f33;
+    box-shadow: 0 2px 8px rgba(209, 40, 64, 0.25);
+  }
+  .btn-primary:disabled {
+    background-color: #eae8df;
+    color: #78766d;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .btn-ghost {
+    background-color: transparent;
+    color: #78766d;
+  }
+  .btn-ghost:hover {
+    color: #31070d;
+  }
+}
+
 html {
   /* Fluid typography to match arrivalcreative.com */
   font-size: calc(0.625rem + 0.416667vw);

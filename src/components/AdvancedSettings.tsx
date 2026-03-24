@@ -23,33 +23,52 @@ interface AdvancedSettingsProps {
   onChange: (settings: CompressionSettings) => void;
 }
 
-const FORMAT_OPTIONS: { value: CompressionSettings["format"]; label: string; description: string }[] = [
-  { value: "webp", label: "WebP", description: "Best for most website images. Small file size, great quality." },
-  { value: "jpeg", label: "JPEG", description: "Good for photos when WebP isn't supported." },
-  { value: "png", label: "PNG", description: "Use for images with transparent backgrounds." },
+const FORMAT_OPTIONS: { value: CompressionSettings["format"]; label: string }[] = [
+  { value: "webp", label: "WebP" },
+  { value: "jpeg", label: "JPEG" },
+  { value: "png", label: "PNG" },
 ];
 
 const DIMENSION_OPTIONS: { value: CompressionSettings["dimensionPreset"]; label: string; description: string }[] = [
-  { value: "1920x1080", label: "1920 × 1080", description: "Standard HD. Best for hero images and full-width sections." },
-  { value: "1280x720", label: "1280 × 720", description: "Good for blog thumbnails and smaller sections." },
-  { value: "800x600", label: "800 × 600", description: "Small. Good for inline content images." },
-  { value: "custom", label: "Custom", description: "Set your own dimensions." },
+  { value: "1920x1080", label: "1920 × 1080", description: "HD — hero images" },
+  { value: "1280x720", label: "1280 × 720", description: "Blog thumbnails" },
+  { value: "800x600", label: "800 × 600", description: "Inline content" },
+  { value: "custom", label: "Custom", description: "Your own size" },
 ];
 
 function GearIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="14"
+      height="14"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
       <circle cx="12" cy="12" r="3" />
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  );
+}
+
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      aria-hidden="true"
+      className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+    >
+      <polyline points="2 3 5 7 8 3" />
     </svg>
   );
 }
@@ -64,64 +83,70 @@ export default function AdvancedSettings({ settings, onChange }: AdvancedSetting
       <div className="flex justify-end">
         <button
           onClick={() => setIsOpen((v) => !v)}
-          className={`flex items-center gap-1.5 text-xs font-['Open_Sans',sans-serif] font-light transition-colors ${
-            isOpen ? "text-[#31070d]" : "text-[#78766d] hover:text-[#31070d]"
+          className={`flex items-center gap-1.5 text-xs font-['Open_Sans',sans-serif] font-medium border px-3 py-1.5 rounded transition-colors ${
+            isOpen
+              ? "border-[#31070d]/30 text-[#31070d] bg-[#faf8f0]"
+              : "border-[#eae8df] text-[#78766d] hover:border-[#78766d]/50 hover:text-[#31070d]"
           }`}
-          title="Advanced settings"
+          title="Compression settings"
         >
           <GearIcon />
-          <span>Advanced</span>
+          <span>{isOpen ? "Hide settings" : "Settings"}</span>
+          <ChevronIcon open={isOpen} />
         </button>
       </div>
 
       {isOpen && (
-        <div className="mt-3 border border-[#eae8df] bg-[#faf8f0] px-5 py-4 space-y-5">
-          {/* Output Format */}
-          <div>
-            <p className="text-xs font-normal text-[#78766d] uppercase tracking-wide mb-2">Output Format</p>
-            <div className="space-y-1.5">
-              {FORMAT_OPTIONS.map((opt) => (
-                <label key={opt.value} className="flex items-start gap-2.5 cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="format"
-                    value={opt.value}
-                    checked={settings.format === opt.value}
-                    onChange={() => update({ format: opt.value })}
-                    className="mt-0.5 accent-[#d12840] flex-shrink-0"
-                  />
-                  <span>
-                    <span className="text-sm text-[#31070d] font-normal">{opt.label}</span>
-                    <span className="text-xs text-[#78766d] ml-2">{opt.description}</span>
-                  </span>
-                </label>
-              ))}
+        <div className="mt-2 border border-[#eae8df] bg-[#faf8f0] rounded px-5 py-4">
+
+          {/* Row 1: Format + Quality */}
+          <div className="grid grid-cols-2 gap-6 pb-4 border-b border-[#eae8df]">
+
+            {/* Format */}
+            <div>
+              <p className="text-xs font-medium text-[#78766d] uppercase tracking-wide mb-2.5">Format</p>
+              <div className="space-y-2">
+                {FORMAT_OPTIONS.map((opt) => (
+                  <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="format"
+                      value={opt.value}
+                      checked={settings.format === opt.value}
+                      onChange={() => update({ format: opt.value })}
+                      className="accent-[#d12840] flex-shrink-0"
+                    />
+                    <span className="text-sm text-[#31070d]">{opt.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
+
+            {/* Quality */}
+            <div>
+              <div className="flex items-baseline justify-between mb-2.5">
+                <p className="text-xs font-medium text-[#78766d] uppercase tracking-wide">Quality</p>
+                <span className="text-sm font-medium text-[#31070d] tabular-nums">{settings.quality}</span>
+              </div>
+              <input
+                type="range"
+                min={1}
+                max={100}
+                value={settings.quality}
+                onChange={(e) => update({ quality: Number(e.target.value) })}
+                className="w-full accent-[#d12840] h-1"
+              />
+              <p className="text-xs text-[#78766d] mt-1.5">Lower = smaller file</p>
+            </div>
+
           </div>
 
-          {/* Quality */}
-          <div>
-            <div className="flex items-baseline justify-between mb-1.5">
-              <p className="text-xs font-normal text-[#78766d] uppercase tracking-wide">Compression Quality</p>
-              <span className="text-sm font-normal text-[#31070d]">{settings.quality}</span>
-            </div>
-            <input
-              type="range"
-              min={1}
-              max={100}
-              value={settings.quality}
-              onChange={(e) => update({ quality: Number(e.target.value) })}
-              className="w-full accent-[#d12840] h-1"
-            />
-            <p className="text-xs text-[#78766d] mt-1">Lower = smaller file, higher = better looking.</p>
-          </div>
-
-          {/* Output Dimensions */}
-          <div>
-            <p className="text-xs font-normal text-[#78766d] uppercase tracking-wide mb-2">Output Dimensions</p>
-            <div className="space-y-1.5">
+          {/* Row 2: Dimensions */}
+          <div className="pt-4">
+            <p className="text-xs font-medium text-[#78766d] uppercase tracking-wide mb-2.5">Dimensions</p>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2">
               {DIMENSION_OPTIONS.map((opt) => (
-                <label key={opt.value} className="flex items-start gap-2.5 cursor-pointer">
+                <label key={opt.value} className="flex items-start gap-2 cursor-pointer">
                   <input
                     type="radio"
                     name="dimensionPreset"
@@ -130,23 +155,23 @@ export default function AdvancedSettings({ settings, onChange }: AdvancedSetting
                     onChange={() => update({ dimensionPreset: opt.value })}
                     className="mt-0.5 accent-[#d12840] flex-shrink-0"
                   />
-                  <span>
-                    <span className="text-sm text-[#31070d] font-normal">{opt.label}</span>
-                    <span className="text-xs text-[#78766d] ml-2">{opt.description}</span>
-                  </span>
+                  <div>
+                    <span className="text-sm text-[#31070d]">{opt.label}</span>
+                    <span className="block text-xs text-[#78766d]">{opt.description}</span>
+                  </div>
                 </label>
               ))}
             </div>
 
             {settings.dimensionPreset === "custom" && (
-              <div className="flex items-center gap-2 mt-3 ml-5">
+              <div className="flex items-center gap-2 mt-3">
                 <input
                   type="number"
                   value={settings.customWidth}
                   onChange={(e) => update({ customWidth: e.target.value })}
                   placeholder="Width"
                   min={1}
-                  className="w-24 bg-[#fffef7] border border-[#eae8df] px-2 py-1 text-sm text-[#31070d] focus:outline-none focus:border-[#78766d]"
+                  className="w-24 bg-[#fffef7] border border-[#eae8df] rounded px-2 py-1 text-sm text-[#31070d] focus:outline-none focus:border-[#78766d]"
                 />
                 <span className="text-xs text-[#78766d]">×</span>
                 <input
@@ -155,12 +180,13 @@ export default function AdvancedSettings({ settings, onChange }: AdvancedSetting
                   onChange={(e) => update({ customHeight: e.target.value })}
                   placeholder="Height"
                   min={1}
-                  className="w-24 bg-[#fffef7] border border-[#eae8df] px-2 py-1 text-sm text-[#31070d] focus:outline-none focus:border-[#78766d]"
+                  className="w-24 bg-[#fffef7] border border-[#eae8df] rounded px-2 py-1 text-sm text-[#31070d] focus:outline-none focus:border-[#78766d]"
                 />
                 <span className="text-xs text-[#78766d]">px</span>
               </div>
             )}
           </div>
+
         </div>
       )}
     </div>

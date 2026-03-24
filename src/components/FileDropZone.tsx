@@ -45,7 +45,7 @@ export default function FileDropZone({ onFilesAdded }: FileDropZoneProps) {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onClick={handleClick}
-      className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all ${
+      className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
         isDragging
           ? "border-[#d12840] bg-[#ffeaea]"
           : "border-[#eae8df] hover:border-[#d12840]/50 bg-[#faf8f0]"
@@ -59,11 +59,26 @@ export default function FileDropZone({ onFilesAdded }: FileDropZoneProps) {
         onChange={handleInputChange}
         className="hidden"
       />
-      <div className="text-[#78766d]">
-        <p className="text-lg font-normal mb-1">
-          {isDragging ? "Drop images here" : "Drag & drop images here"}
+      <div className={`flex flex-col items-center gap-2 ${isDragging ? "text-[#d12840]" : "text-[#78766d]"}`}>
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="16 16 12 12 8 16" />
+          <line x1="12" y1="12" x2="12" y2="21" />
+          <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+        </svg>
+        <p className="text-sm font-normal">
+          {isDragging ? "Drop images here" : "Drop images here, or click to browse"}
         </p>
-        <p className="text-sm">or click to browse — JPG, PNG, WebP, BMP, TIFF, AVIF</p>
+        <p className="text-xs text-[#78766d]/70">JPG · PNG · WebP · AVIF · up to 3 files</p>
       </div>
     </div>
   );
